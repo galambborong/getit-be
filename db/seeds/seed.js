@@ -4,6 +4,7 @@ const {
   commentData,
   userData
 } = require('../data/index.js');
+const {modifyTimeStamp} = require('../utils/data-manipulation')
 
 exports.seed = function (knex) {
   return knex.migrate
@@ -12,8 +13,12 @@ exports.seed = function (knex) {
     .then(() => {
       return knex('users').insert(userData).returning('*');
     })
-    .then((insertedData) => {
-      console.log(insertedData);
-      // return knex();
-    });
+    .then(() => {
+      return knex('topics').insert(topicData).returning('*');
+    })
+    .then(() =>  {
+      const formattedArticles = modifyTimeStamp(articleData)
+      return knex('articles').insert(formattedArticles).returning('*')
+    })
+    .then((data) => {console.log(data)})
 };
