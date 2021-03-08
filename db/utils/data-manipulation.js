@@ -12,5 +12,15 @@ exports.modifyTimeStamp = (array) => {
     return newArray
 }
 
-const dateTime = new Date(1542284514171)
+exports.creatRefObj = (array, key, value) => {
+    const newObj = {};
+    array.map(item => {
+        const newKey = item[key];
+        const newValue = item[value]
+        newObj[newKey] = newValue 
+        
+    })
+
+    return newObj
+}
 
