@@ -2,9 +2,18 @@ const {
   topicData,
   articleData,
   commentData,
-  userData,
+  userData
 } = require('../data/index.js');
 
 exports.seed = function (knex) {
-  // add seeding functionality here
+  return knex.migrate
+    .rollback()
+    .then(() => knex.migrate.latest())
+    .then(() => {
+      return knex('users').insert(userData).returning('*');
+    })
+    .then((insertedData) => {
+      console.log(insertedData);
+      // return knex();
+    });
 };
