@@ -23,14 +23,17 @@ exports.creatRefObj = (array, key, value) => {
   return newObj;
 };
 
-exports.formatItems = (array) => {
+exports.formatItems = (array, key, value, refObj) => {
   const formattedItem = array.map((item) => {
     const copyItem = { ...item };
-    const value = copyItem.created_by;
-    copyItem.author = value;
-    delete copyItem.belongs_to;
+    const temporaryValue = copyItem[key];
+    if (refObj) {
+      copyItem[value] = refObj[temporaryValue];
+    } else {
+      copyItem[value] = temporaryValue;
+    }
+    delete copyItem[key];
     return copyItem;
   });
-  console.log(formattedItem);
   return formattedItem;
 };

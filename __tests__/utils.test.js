@@ -172,38 +172,118 @@ describe('formatItems', () => {
         created_at: 1479818163389
       }
     ];
-    expect(formatItems(input)).toEqual([
+    expect(formatItems(input, 'created_by', 'author')).toEqual([
       {
         body:
           'The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.',
-        author: 'Living in the shadow of a great man',
+        belongs_to: 'Living in the shadow of a great man',
+        author: 'butter_bridge',
+        votes: 14,
+        created_at: 1479818163389
+      }
+    ]);
+  });
+  test('Does not mutate original input', () => {
+    const input = [
+      {
+        body:
+          'The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.',
+        belongs_to: 'Living in the shadow of a great man',
+        created_by: 'butter_bridge',
+        votes: 14,
+        created_at: 1479818163389
+      }
+    ];
+    formatItems(input, 'created_by', 'author');
+    expect(input).toEqual([
+      {
+        body:
+          'The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.',
+        belongs_to: 'Living in the shadow of a great man',
         created_by: 'butter_bridge',
         votes: 14,
         created_at: 1479818163389
       }
     ]);
-    test.only('Does not mutate original input', () => {
-      const input = [
+  });
+  test('Works for multiple object array', () => {
+    const input = [
+      {
+        body:
+          "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+        belongs_to: "They're not exactly dogs, are they?",
+        created_by: 'butter_bridge',
+        votes: 16,
+        created_at: 1511354163389
+      },
+      {
+        body:
+          'The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.',
+        belongs_to: 'Living in the shadow of a great man',
+        created_by: 'butter_bridge',
+        votes: 14,
+        created_at: 1479818163389
+      },
+      {
+        body:
+          'Replacing the quiet elegance of the dark suit and tie with the casual indifference of these muted earth tones is a form of fashion suicide, but, uh, call me crazy — onyou it works.',
+        belongs_to: 'Living in the shadow of a great man',
+        created_by: 'icellusedkars',
+        votes: 100,
+        created_at: 1448282163389
+      }
+    ];
+
+    expect(formatItems(input, 'created_by', 'author')).toEqual([
+      {
+        body:
+          "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+        belongs_to: "They're not exactly dogs, are they?",
+        author: 'butter_bridge',
+        votes: 16,
+        created_at: 1511354163389
+      },
+      {
+        body:
+          'The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.',
+        belongs_to: 'Living in the shadow of a great man',
+        author: 'butter_bridge',
+        votes: 14,
+        created_at: 1479818163389
+      },
+      {
+        body:
+          'Replacing the quiet elegance of the dark suit and tie with the casual indifference of these muted earth tones is a form of fashion suicide, but, uh, call me crazy — onyou it works.',
+        belongs_to: 'Living in the shadow of a great man',
+        author: 'icellusedkars',
+        votes: 100,
+        created_at: 1448282163389
+      }
+    ]);
+  });
+  test('Testing key value pairs using a reference object', () => {
+    const input = [
+      {
+        body:
+          'The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.',
+        belongs_to: 'Living in the shadow of a great man',
+        created_by: 'butter_bridge',
+        votes: 14,
+        created_at: 1479818163389
+      }
+    ];
+    const articleRefs = { 'Living in the shadow of a great man': 1 };
+    expect(formatItems(input, 'belongs_to', 'article_id', articleRefs)).toEqual(
+      [
         {
           body:
             'The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.',
-          belongs_to: 'Living in the shadow of a great man',
+          article_id: 1,
           created_by: 'butter_bridge',
           votes: 14,
           created_at: 1479818163389
         }
-      ];
-      formatItems(input);
-      expect(input).toEqual([
-        {
-          body:
-            'The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.',
-          belongs_to: 'Living in the shadow of a great man',
-          created_by: 'butter_bridge',
-          votes: 14,
-          created_at: 1479818163389
-        }
-      ]);
-    });
+      ]
+    );
   });
 });
