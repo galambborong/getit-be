@@ -9,7 +9,7 @@ afterAll(() => connection.destroy());
 describe('/api', () => {
   describe('/topics', () => {
     describe('GET method', () => {
-      test('returns status 200 and the topics', () => {
+      test('Status 200: Return all topics', () => {
         return request(app)
           .get('/api/topics')
           .expect(200)
@@ -26,7 +26,7 @@ describe('/api', () => {
   describe('/users', () => {
     describe('/:username', () => {
       describe('GET method', () => {
-        it('Successfully returns appropriate username with 200 status code', () => {
+        it('Status 200: Reutn appropriate user from username', () => {
           return request(app)
             .get('/api/users/lurker')
             .expect(200)
@@ -39,7 +39,7 @@ describe('/api', () => {
             });
         });
         describe('Error handling', () => {
-          it('Status 404 when passing a username which does not exist', () => {
+          it('Status 404: Username does not exist', () => {
             return request(app)
               .get('/api/users/xyz')
               .expect(404)
@@ -47,7 +47,7 @@ describe('/api', () => {
                 expect(body.msg).toBe('User does not exist');
               });
           });
-          it('Status 405 when attempting an unhandled method', () => {
+          it('Status 405: Unhandled method', () => {
             return request(app)
               .delete('/api/users/icellusedkars')
               .expect(405)
@@ -62,7 +62,7 @@ describe('/api', () => {
   describe('/articles', () => {
     describe('/:article_id', () => {
       describe('DELETE method', () => {
-        it('Delete article by id and return 204 status code', () => {
+        it('Status 204: Delete article by article_id', () => {
           return request(app)
             .delete('/api/articles/5')
             .expect(204)
@@ -76,7 +76,7 @@ describe('/api', () => {
               expect(articles).toHaveLength(0);
             });
         });
-        it('Test that related comments are deleted too', () => {
+        it('Status 204: Test related comments are deleted', () => {
           return request(app)
             .delete('/api/articles/5')
             .expect(204)
@@ -110,7 +110,7 @@ describe('/api', () => {
         });
       });
       describe('PATCH method', () => {
-        it('Update existing article by id and return 200 status code', () => {
+        it('Status 200: Update existing article by id', () => {
           return request(app)
             .patch('/api/articles/3')
             .send({ inc_votes: 7 })
@@ -119,7 +119,7 @@ describe('/api', () => {
               expect(body.article.votes).toBe(7);
             });
         });
-        it('Correctly handles negative values', () => {
+        it('Status 200: Correctly handles negative values', () => {
           return request(app)
             .patch('/api/articles/3')
             .send({ inc_votes: -7 })
@@ -167,7 +167,53 @@ describe('/api', () => {
           });
         });
       });
-      describe('GET method', () => {});
+      describe('GET method', () => {
+        it('Status 200: Return specified article with expected shape', () => {
+          return request(app)
+            .get('/api/articles/1')
+            .expect(200)
+            .then(({ body }) => {
+              expect(body.article).toMatchObject({
+                article_id: expect.any(Number),
+                title: expect.any(String),
+                body: expect.any(String),
+                votes: expect.any(Number),
+                topic: expect.any(String),
+                author: expect.any(String),
+                created_at: expect.any(String)
+              });
+            });
+        });
+        describe('Error handling', () => {
+          it('Status 400: Invalid article_id', () => {
+            return request(app)
+              .get('/api/articles/a-random-id')
+              .expect(400)
+              .then(({ body }) => {
+                expect(body.msg).toBe('Invalid type');
+              });
+          });
+          it('Status 404: article_id not found', () => {
+            return request(app)
+              .get('/api/articles/321')
+              .expect(404)
+              .then(({ body }) => {
+                expect(body.msg).toBe('Article not found');
+              });
+          });
+        });
+      });
+      describe('Disallowed methods', () => {
+        it('Status 405: Unhandled methods', () => {
+          return request(app)
+            .post('/api/articles/5')
+            .send({ data: 'garbage' })
+            .expect(405)
+            .then(({ body }) => {
+              expect(body.msg).toBe('Method not allowed');
+            });
+        });
+      });
     });
   });
 });

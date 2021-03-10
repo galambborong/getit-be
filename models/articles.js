@@ -27,3 +27,15 @@ exports.updateArticleById = (articleId, votesIncrement) => {
       });
   }
 };
+
+exports.fetchArticleById = (articleId) => {
+  return connection('articles')
+    .where('article_id', articleId)
+    .then((article) => {
+      if (!article.length) {
+        return Promise.reject({ status: 404, msg: 'Article not found' });
+      } else {
+        return article;
+      }
+    });
+};

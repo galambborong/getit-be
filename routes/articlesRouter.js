@@ -1,12 +1,16 @@
 const articlesRouter = require('express').Router();
 const {
   deleteArticleById,
-  patchArticleById
+  patchArticleById,
+  getArticleById
 } = require('../controllers/articles');
+const { err405 } = require('../errors');
 
 articlesRouter
   .route('/:article_id')
   .delete(deleteArticleById)
-  .patch(patchArticleById);
+  .patch(patchArticleById)
+  .get(getArticleById)
+  .all(err405);
 
 module.exports = articlesRouter;
