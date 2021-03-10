@@ -9,3 +9,21 @@ exports.deleteArticle = (articleId) => {
         return Promise.reject({ status: 404, msg: 'Article not found' });
     });
 };
+
+exports.updateArticleById = (articleId, votesIncrement) => {
+  if (votesIncrement === undefined) {
+    return Promise.reject({ status: 400, msg: 'Invalid votes input' });
+  } else {
+    return connection('articles')
+      .where('article_id', articleId)
+      .increment('votes', votesIncrement)
+      .returning('*')
+      .then((article) => {
+        if (!article.length) {
+          return Promise.reject({ status: 404, msg: 'Article not found' });
+        } else {
+          return article;
+        }
+      });
+  }
+};

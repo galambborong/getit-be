@@ -28,7 +28,7 @@ describe('/api', () => {
       describe('GET method', () => {
         it('Successfully returns appropriate username with 200 status code', () => {
           return request(app)
-            .get('/api/users/icellusedkars')
+            .get('/api/users/lurker')
             .expect(200)
             .then(({ body }) => {
               expect(body.user).toMatchObject({
@@ -47,12 +47,12 @@ describe('/api', () => {
                 expect(body.msg).toBe('User does not exist');
               });
           });
-          xit('Status 400 when passing invalid username', () => {
+          it('Status 405 when attempting an unhandled method', () => {
             return request(app)
-              .get('/api/users/#!aa')
-              .expect(400)
-              .then((res) => {
-                console.log(res);
+              .delete('/api/users/icellusedkars')
+              .expect(405)
+              .then(({ body }) => {
+                expect(body.msg).toBe('Method not allowed');
               });
           });
         });
@@ -91,7 +91,7 @@ describe('/api', () => {
             });
         });
         describe('Error handling', () => {
-          it('Status 400 when passed invalid article_id', () => {
+          it('Status 400: Invalid article_id', () => {
             return request(app)
               .delete('/api/articles/pigeon')
               .expect(400)
@@ -99,7 +99,7 @@ describe('/api', () => {
                 expect(body.msg).toBe('Invalid type');
               });
           });
-          it('Status 404 when passed valid id which is not present', () => {
+          it('Status 404: Valid id not present', () => {
             return request(app)
               .delete('/api/articles/301')
               .expect(404)
@@ -109,6 +109,65 @@ describe('/api', () => {
           });
         });
       });
+      describe('PATCH method', () => {
+        it('Update existing article by id and return 200 status code', () => {
+          return request(app)
+            .patch('/api/articles/3')
+            .send({ inc_votes: 7 })
+            .expect(200)
+            .then(({ body }) => {
+              expect(body.article.votes).toBe(7);
+            });
+        });
+        it('Correctly handles negative values', () => {
+          return request(app)
+            .patch('/api/articles/3')
+            .send({ inc_votes: -7 })
+            .expect(200)
+            .then(({ body }) => {
+              expect(body.article.votes).toBe(-7);
+            });
+        });
+        describe('Error handling', () => {
+          it('Status 400: Reject PATCH request when key `inc_votes` is not present', () => {
+            return request(app)
+              .patch('/api/articles/2')
+              .send({ votes_inc: 10 })
+              .expect(400)
+              .then(({ body }) => {
+                expect(body.msg).toBe('Invalid votes input');
+              });
+          });
+          it('Status 400: Reject PATCH request when votes value is invalid', () => {
+            return request(app)
+              .patch('/api/articles/1')
+              .send({ inc_votes: 'hello' })
+              .expect(400)
+              .then(({ body }) => {
+                expect(body.msg).toBe('Invalid type');
+              });
+          });
+          it('Status 400: Reject PATCH on invalid article_id', () => {
+            return request(app)
+              .patch('/api/articles/hello_there')
+              .send({ inc_votes: 11 })
+              .expect(400)
+              .then(({ body }) => {
+                expect(body.msg).toBe('Invalid type');
+              });
+          });
+          it('Status 404: Reject PATCH on valid id not present', () => {
+            return request(app)
+              .patch('/api/articles/350')
+              .send({ inc_votes: 69 })
+              .expect(404)
+              .then(({ body }) => {
+                expect(body.msg).toBe('Article not found');
+              });
+          });
+        });
+      });
+      describe('GET method', () => {});
     });
   });
 });
