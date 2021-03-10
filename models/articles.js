@@ -29,12 +29,26 @@ exports.updateArticleById = (articleId, votesIncrement) => {
 };
 
 exports.fetchArticleById = (articleId) => {
-  return connection('articles')
-    .where('article_id', articleId)
+  return connection
+    .select(
+      'articles.article_id',
+      'articles.title',
+      'articles.body',
+      'articles.votes',
+      'articles.topic',
+      'articles.author',
+      'articles.created_at'
+    )
+    .count('comments.comment_id as comment_count')
+    .from('articles')
+    .leftJoin('comments', 'articles.article_id', '=', 'comments.article_id')
+    .where('articles.article_id', articleId)
+    .groupBy('articles.article_id')
     .then((article) => {
       if (!article.length) {
         return Promise.reject({ status: 404, msg: 'Article not found' });
       } else {
+        article[0].comment_count = Number(article[0].comment_count);
         return article;
       }
     });

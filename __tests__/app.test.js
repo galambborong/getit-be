@@ -180,7 +180,8 @@ describe('/api', () => {
                 votes: expect.any(Number),
                 topic: expect.any(String),
                 author: expect.any(String),
-                created_at: expect.any(String)
+                created_at: expect.any(String),
+                comment_count: expect.any(Number)
               });
             });
         });
@@ -212,6 +213,11 @@ describe('/api', () => {
             .then(({ body }) => {
               expect(body.msg).toBe('Method not allowed');
             });
+        });
+      });
+      xdescribe('/comments', () => {
+        describe('POST method', () => {
+          it('Status 201: Comment');
         });
       });
     });
