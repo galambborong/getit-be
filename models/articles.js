@@ -1,5 +1,7 @@
 const connection = require('../db/connection');
 
+const { modifyTimeStamp } = require('../db/utils/data-manipulation');
+
 exports.deleteArticle = (articleId) => {
   return connection('articles')
     .where('article_id', articleId)
@@ -52,4 +54,16 @@ exports.fetchArticleById = (articleId) => {
         return article;
       }
     });
+};
+
+exports.createCommentByArticleId = (articleId, username, body) => {
+  const temporaryComment = {
+    author: username,
+    body: body,
+    article_id: articleId,
+    created_at: Date.now()
+  };
+  const formattedComment = modifyTimeStamp([temporaryComment]);
+
+  return connection('comments').insert(formattedComment).returning('*');
 };

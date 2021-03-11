@@ -1,7 +1,8 @@
 const {
   deleteArticle,
   updateArticleById,
-  fetchArticleById
+  fetchArticleById,
+  createCommentByArticleId
 } = require('../models/articles');
 
 exports.deleteArticleById = (req, res, next) => {
@@ -32,6 +33,18 @@ exports.getArticleById = (req, res, next) => {
   fetchArticleById(article_id)
     .then(([receivedArticle]) => {
       res.status(200).send({ article: receivedArticle });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.postCommentByArticleId = (req, res, next) => {
+  const { article_id } = req.params;
+  const { username, body } = req.body;
+  createCommentByArticleId(article_id, username, body)
+    .then(([response]) => {
+      res.status(201).send({ comment: response });
     })
     .catch((err) => {
       next(err);

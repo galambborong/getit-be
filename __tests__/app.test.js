@@ -215,9 +215,29 @@ describe('/api', () => {
             });
         });
       });
-      xdescribe('/comments', () => {
+      describe('/comments', () => {
         describe('POST method', () => {
-          it('Status 201: Comment');
+          it('Status 201: Comment created', () => {
+            return request(app)
+              .post('/api/articles/2/comments')
+              .send({
+                username: 'lurker',
+                body:
+                  'This is an excellent article and I enjoyed it thoroughly. I would highly recommend it to EVERYONE.'
+              })
+              .expect(201)
+              .then(({ body }) => {
+                expect(body.comment).toMatchObject({
+                  comment_id: expect.any(Number),
+                  author: 'lurker',
+                  article_id: 2,
+                  votes: 0,
+                  created_at: expect.any(String),
+                  body:
+                    'This is an excellent article and I enjoyed it thoroughly. I would highly recommend it to EVERYONE.'
+                });
+              });
+          });
         });
       });
     });
