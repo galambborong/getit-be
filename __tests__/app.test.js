@@ -217,7 +217,7 @@ describe('/api', () => {
       });
       describe('/comments', () => {
         describe('POST method', () => {
-          it('Status 201: Comment created', () => {
+          it('Status 201: Comment created and returned', () => {
             return request(app)
               .post('/api/articles/2/comments')
               .send({
@@ -272,6 +272,45 @@ describe('/api', () => {
                   expect(body.msg).toBe('Not found');
                 });
             });
+            it('Status 404: username not found', () => {
+              return request(app)
+                .post('/api/articles/9/comments')
+                .send({
+                  username: 'galambborong',
+                  body: 'This is a comment of much substance.'
+                })
+                .expect(404)
+                .then(({ body }) => {
+                  expect(body.msg).toBe('Not found');
+                });
+            });
+          });
+        });
+        describe('GET method', () => {
+          it('Status 200: Return comments in expected shape', () => {
+            return request(app)
+              .get('/api/articles/1/comments')
+              .expect(200)
+              .then(({ body }) => {
+                expect(Array.isArray(body.comments)).toBe(true);
+                expect(body.comments[0]).toMatchObject({
+                  comment_id: expect.any(Number),
+                  votes: expect.any(Number),
+                  created_at: expect.any(String),
+                  author: expect.any(String),
+                  body: expect.any(String)
+                });
+              });
+          });
+          it('Status 200: Comments sorted by `created_at` in descending order by default', () => {
+            return request(app)
+              .get('/api/articles/1/comments')
+              .expect(200)
+              .then(({ body }) => {
+                expect(body.comments).toBeSortedBy('created_at', {
+                  descending: true
+                });
+              });
           });
         });
       });

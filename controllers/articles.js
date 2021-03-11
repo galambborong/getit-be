@@ -2,7 +2,8 @@ const {
   deleteArticle,
   updateArticleById,
   fetchArticleById,
-  createCommentByArticleId
+  createCommentByArticleId,
+  fetchCommentsByArticleId
 } = require('../models/articles');
 
 exports.deleteArticleById = (req, res, next) => {
@@ -42,10 +43,20 @@ exports.getArticleById = (req, res, next) => {
 exports.postCommentByArticleId = (req, res, next) => {
   const { article_id } = req.params;
   const { username, body } = req.body;
-  console.log(`username: ${username}, body: ${body}`);
   createCommentByArticleId(article_id, username, body)
     .then(([postedComment]) => {
       res.status(201).send({ comment: postedComment });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.getCommentsByArticleId = (req, res, next) => {
+  const { article_id } = req.params;
+  fetchCommentsByArticleId(article_id)
+    .then((receivedComments) => {
+      res.status(200).send({ comments: receivedComments });
     })
     .catch((err) => {
       next(err);
