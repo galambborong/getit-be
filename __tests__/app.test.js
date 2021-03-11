@@ -60,6 +60,25 @@ describe('/api', () => {
     });
   });
   describe('/articles', () => {
+    describe.only('GET method', () => {
+      it('Status 200: Return all articles in expected shape', () => {
+        return request(app)
+          .get('/api/articles')
+          .expect(200)
+          .then(({ body }) => {
+            expect(Array.isArray(body.articles)).toBe(true);
+            expect(body.articles[0]).toMatchObject({
+              author: expect.any(String),
+              title: expect.any(String),
+              article_id: expect.any(Number),
+              topic: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              comment_count: expect.any(Number)
+            });
+          });
+      });
+    });
     describe('/:article_id', () => {
       describe('DELETE method', () => {
         it('Status 204: Delete article by article_id', () => {

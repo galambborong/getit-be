@@ -89,3 +89,26 @@ exports.checkArticleExists = (articleId) => {
       }
     });
 };
+
+exports.fetchAllArticles = () => {
+  return connection
+    .select(
+      'articles.article_id',
+      'articles.title',
+      'articles.body',
+      'articles.votes',
+      'articles.topic',
+      'articles.author',
+      'articles.created_at'
+    )
+    .count('comments.comment_id AS comment_count')
+    .from('articles')
+    .leftJoin('comments', 'articles.article_id', '=', 'comments.article_id')
+    .groupBy('articles.article_id')
+    .then((articles) => {
+      articles.forEach((article) => {
+        article.comment_count = Number(article.comment_count);
+      });
+      return articles;
+    });
+};

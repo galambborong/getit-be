@@ -4,7 +4,8 @@ const {
   fetchArticleById,
   createCommentByArticleId,
   fetchCommentsByArticleId,
-  checkArticleExists
+  checkArticleExists,
+  fetchAllArticles
 } = require('../models/articles');
 
 exports.deleteArticleById = (req, res, next) => {
@@ -61,6 +62,16 @@ exports.getCommentsByArticleId = (req, res, next) => {
   ])
     .then(([comments]) => {
       res.status(200).send({ comments });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.getAllArticles = (req, res, next) => {
+  fetchAllArticles()
+    .then((articles) => {
+      res.status(200).send({ articles });
     })
     .catch((err) => {
       next(err);
