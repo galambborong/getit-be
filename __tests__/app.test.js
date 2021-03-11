@@ -312,6 +312,38 @@ describe('/api', () => {
                 });
               });
           });
+          describe('Queries', () => {
+            it('Status 200: Sorts by specified column', () => {
+              return request(app)
+                .get('/api/articles/1/comments?sort_by=author')
+                .expect(200)
+                .then(({ body }) => {
+                  expect(body.comments).toBeSortedBy('author', {
+                    ascending: true
+                  });
+                });
+            });
+            it('Status 200: Sorted column follows specified order', () => {
+              return request(app)
+                .get('/api/articles/1/comments?order=asc')
+                .expect(200)
+                .then(({ body }) => {
+                  expect(body.comments).toBeSortedBy('created_at', {
+                    ascending: true
+                  });
+                });
+            });
+            it('Status 200: Sorts by specified column in specified order', () => {
+              return request(app)
+                .get('/api/articles/1/comments?sort_by=votes&order=asc')
+                .expect(200)
+                .then(({ body }) => {
+                  expect(body.comments).toBeSortedBy('votes', {
+                    ascending: true
+                  });
+                });
+            });
+          });
         });
       });
     });

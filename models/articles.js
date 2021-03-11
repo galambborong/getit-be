@@ -71,8 +71,11 @@ exports.createCommentByArticleId = (articleId, username, body) => {
   return connection('comments').insert(formattedComment).returning('*');
 };
 
-exports.fetchCommentsByArticleId = (articleId) => {
-  return connection('comments')
+exports.fetchCommentsByArticleId = (articleId, { sort_by, order }) => {
+  if (sort_by === 'author' && order === undefined) order = 'asc';
+  return connection
+    .select('comment_id', 'votes', 'created_at', 'author', 'body')
+    .from('comments')
     .where('article_id', articleId)
-    .orderBy('created_at', 'desc');
+    .orderBy(sort_by || 'created_at', order || 'desc');
 };
