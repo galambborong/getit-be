@@ -11,18 +11,17 @@ exports.err400 = (err, req, res, next) => {
   }
 };
 
+exports.err404 = (err, req, res, next) => {
+  console.log(err, req, res, next);
+  if (err.code === '23503') {
+    res.status(404).send({ msg: 'Not found' });
+  } else {
+    next(err);
+  }
+};
 exports.err405 = (req, res, next) => {
   res.status(405).send({ msg: 'Method not allowed' });
 };
-
-// exports.err405 = (err, req, res, next) => {
-//   console.log(err, req, res, next);
-//   if (err.code === '23503') {
-//     res.status(405).send({ msg: 'Method not allowed' });
-//   } else {
-//     next(err);
-//   }
-// };
 
 exports.customErrorHandler = (err, req, res, next) => {
   if (err.status) {

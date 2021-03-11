@@ -238,6 +238,41 @@ describe('/api', () => {
                 });
               });
           });
+          describe('Error handling', () => {
+            it('Status 400: Invalid article_id', () => {
+              return request(app)
+                .post('/api/articles/jeff/comments')
+                .send({ username: 'lurker', body: 'This will never work' })
+                .expect(400)
+                .then(({ body }) => {
+                  expect(body.msg).toBe('Invalid type');
+                });
+            });
+            it('Status 400: Invalid comment structure', () => {
+              return request(app)
+                .post('/api/articles/1/comments')
+                .send({
+                  a_random_key: 'An even more random value',
+                  body: 'This should never work'
+                })
+                .expect(400)
+                .then(({ body }) => {
+                  expect(body.msg).toBe('Invalid comment properties');
+                });
+            });
+            it('Status 404: article_id not found', () => {
+              return request(app)
+                .post('/api/articles/213/comments')
+                .send({
+                  username: 'icellusedkars',
+                  body: 'This is an awesome comment'
+                })
+                .expect(404)
+                .then(({ body }) => {
+                  expect(body.msg).toBe('Not found');
+                });
+            });
+          });
         });
       });
     });

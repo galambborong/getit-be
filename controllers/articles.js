@@ -42,9 +42,10 @@ exports.getArticleById = (req, res, next) => {
 exports.postCommentByArticleId = (req, res, next) => {
   const { article_id } = req.params;
   const { username, body } = req.body;
+  console.log(`username: ${username}, body: ${body}`);
   createCommentByArticleId(article_id, username, body)
-    .then(([response]) => {
-      res.status(201).send({ comment: response });
+    .then(([postedComment]) => {
+      res.status(201).send({ comment: postedComment });
     })
     .catch((err) => {
       next(err);

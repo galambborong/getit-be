@@ -4,7 +4,8 @@ const {
   err500,
   customErrorHandler,
   err405,
-  err400
+  err400,
+  err404
 } = require('./errors/index');
 const app = express();
 
@@ -14,6 +15,7 @@ app.use('/api', apiRouter);
 app.use(customErrorHandler);
 
 app.use(err400);
+app.use(err404);
 app.use(err405);
 app.use(err500);
 

@@ -57,6 +57,9 @@ exports.fetchArticleById = (articleId) => {
 };
 
 exports.createCommentByArticleId = (articleId, username, body) => {
+  if (username === undefined || body === undefined) {
+    return Promise.reject({ status: 400, msg: 'Invalid comment properties' });
+  }
   const temporaryComment = {
     author: username,
     body: body,
