@@ -3,7 +3,8 @@ const {
   updateArticleById,
   fetchArticleById,
   createCommentByArticleId,
-  fetchCommentsByArticleId
+  fetchCommentsByArticleId,
+  checkArticleExists
 } = require('../models/articles');
 
 exports.deleteArticleById = (req, res, next) => {
@@ -54,9 +55,12 @@ exports.postCommentByArticleId = (req, res, next) => {
 
 exports.getCommentsByArticleId = (req, res, next) => {
   const { article_id } = req.params;
-  fetchCommentsByArticleId(article_id, req.query)
-    .then((receivedComments) => {
-      res.status(200).send({ comments: receivedComments });
+  Promise.all([
+    fetchCommentsByArticleId(article_id, req.query),
+    checkArticleExists(article_id)
+  ])
+    .then(([comments]) => {
+      res.status(200).send({ comments });
     })
     .catch((err) => {
       next(err);

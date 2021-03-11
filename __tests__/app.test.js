@@ -312,6 +312,14 @@ describe('/api', () => {
                 });
               });
           });
+          it('Status 200: article_id has no comments', () => {
+            return request(app)
+              .get('/api/articles/2/comments')
+              .expect(200)
+              .then(({ body }) => {
+                expect(body.comments).toHaveLength(0);
+              });
+          });
           describe('Queries', () => {
             it('Status 200: Sorts by specified column', () => {
               return request(app)

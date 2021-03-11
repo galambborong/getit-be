@@ -77,12 +77,15 @@ exports.fetchCommentsByArticleId = (articleId, { sort_by, order }) => {
     .select('comment_id', 'votes', 'created_at', 'author', 'body')
     .from('comments')
     .where('article_id', articleId)
-    .orderBy(sort_by || 'created_at', order || 'desc')
-    .then((comments) => {
-      if (!comments.length) {
+    .orderBy(sort_by || 'created_at', order || 'desc');
+};
+
+exports.checkArticleExists = (articleId) => {
+  return connection('articles')
+    .where('article_id', articleId)
+    .then((article) => {
+      if (article.length === 0) {
         return Promise.reject({ status: 404, msg: 'Article not found' });
-      } else {
-        return comments;
       }
     });
 };
