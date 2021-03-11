@@ -344,6 +344,46 @@ describe('/api', () => {
                 });
             });
           });
+          describe('Error handling', () => {
+            describe('Standard request errors', () => {
+              it('Status 400: Invalid article_id', () => {
+                return request(app)
+                  .get('/api/articles/pigeon/comments')
+                  .expect(400)
+                  .then(({ body }) => {
+                    expect(body.msg).toBe('Invalid type');
+                  });
+              });
+              it('Status 404: article_id not found', () => {
+                return request(app)
+                  .get('/api/articles/0/comments')
+                  .expect(404)
+                  .then(({ body }) => {
+                    expect(body.msg).toBe('Article not found');
+                  });
+              });
+            });
+            describe('Query-specific errors', () => {
+              it('Status 400: Sort by invalid column name', () => {
+                return request(app)
+                  .get('/api/articles/1/comments?sort_by=pigeon')
+                  .expect(400)
+                  .then(({ body }) => {
+                    expect(body.msg).toBe('Invalid type');
+                  });
+              });
+            });
+          });
+        });
+        describe('Diallowed methods', () => {
+          it('Status 405: Methods not allowed', () => {
+            return request(app)
+              .delete('/api/articles/1/comments')
+              .expect(405)
+              .then(({ body }) => {
+                expect(body.msg).toBe('Method not allowed');
+              });
+          });
         });
       });
     });

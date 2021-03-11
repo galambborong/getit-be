@@ -4,7 +4,7 @@ exports.err500 = (err, req, res, next) => {
 };
 
 exports.err400 = (err, req, res, next) => {
-  if (err.code === '22P02') {
+  if (err.code === '22P02' || err.code === '42703') {
     res.status(400).send({ msg: 'Invalid type' });
   } else {
     next(err);

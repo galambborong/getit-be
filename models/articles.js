@@ -77,5 +77,12 @@ exports.fetchCommentsByArticleId = (articleId, { sort_by, order }) => {
     .select('comment_id', 'votes', 'created_at', 'author', 'body')
     .from('comments')
     .where('article_id', articleId)
-    .orderBy(sort_by || 'created_at', order || 'desc');
+    .orderBy(sort_by || 'created_at', order || 'desc')
+    .then((comments) => {
+      if (!comments.length) {
+        return Promise.reject({ status: 404, msg: 'Article not found' });
+      } else {
+        return comments;
+      }
+    });
 };
