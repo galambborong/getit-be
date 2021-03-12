@@ -608,4 +608,75 @@ describe('/api', () => {
       });
     });
   });
+  describe('/comments', () => {
+    describe('/:comment_id', () => {
+      describe.only('PATCH method', () => {
+        it('Status 200: Update comment votes column', () => {
+          return request(app)
+            .patch('/api/comments/1')
+            .send({ inc_votes: 69 })
+            .expect(200)
+            .then(({ body }) => {
+              expect(body.comment).toMatchObject({
+                comment_id: 1,
+                author: expect.any(String),
+                article_id: expect.any(Number),
+                votes: expect.any(Number),
+                created_at: expect.any(String),
+                body: expect.any(String)
+              });
+              expect(body.comment.votes >= 69).toBe(true);
+            });
+        });
+        it('Status 200: Handle negative values', () => {
+          return request(app)
+            .patch('/api/comments/2')
+            .send({ inc_votes: -321 })
+            .expect(200)
+            .then(({ body }) => {
+              expect(body.comment.comment_id).toBe(2);
+              expect(body.comment.votes <= -300).toBe(true);
+            });
+        });
+        describe('Error handling', () => {
+          it('Status 400: Value not valid', () => {
+            return request(app)
+              .patch('/api/comments/3')
+              .send({ inc_votes: 'this should not work' })
+              .expect(400)
+              .then(({ body }) => {
+                expect(body.msg).toBe('Invalid type');
+              });
+          });
+          it('Status 400: Unrecognised key', () => {
+            return request(app)
+              .patch('/api/comments/5')
+              .send({ votes: 10 })
+              .expect(400)
+              .then(({ body }) => {
+                expect(body.msg).toBe('Votes update not recognised');
+              });
+          });
+          it('Status 400: Invalid comment_id', () => {
+            return request(app)
+              .patch('/api/comments/my_favourite_comment')
+              .send({ inc_votes: 7 })
+              .expect(400)
+              .then(({ body }) => {
+                expect(body.msg).toBe('Invalid type');
+              });
+          });
+          it('Status 404: comment_id not found', () => {
+            return request(app)
+              .patch('/api/comments/321')
+              .send({ inc_votes: 10 })
+              .expect(404)
+              .then(({ body }) => {
+                expect(body.msg).toBe('Comment not found');
+              });
+          });
+        });
+      });
+    });
+  });
 });

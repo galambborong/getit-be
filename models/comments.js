@@ -13,7 +13,6 @@ exports.createCommentByArticleId = (articleId, username, body) => {
     created_at: Date.now()
   };
   const formattedComment = modifyTimeStamp([temporaryComment]);
-
   return connection('comments').insert(formattedComment).returning('*');
 };
 
@@ -24,4 +23,17 @@ exports.fetchCommentsByArticleId = (articleId, { sort_by, order }) => {
     .from('comments')
     .where('article_id', articleId)
     .orderBy(sort_by || 'created_at', order || 'desc');
+};
+
+exports.updateCommentById = (commentId, { inc_votes }) => {
+  if (!inc_votes)
+    return Promise.reject({ status: 400, msg: 'Votes update not recognised' });
+  return connection('comments')
+    .where('comment_id', commentId)
+    .increment('votes', inc_votes)
+    .returning('*')
+    .then(([comment]) => {
+      if (comment) return comment;
+      else return Promise.reject({ status: 404, msg: 'Comment not found' });
+    });
 };

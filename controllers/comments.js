@@ -1,6 +1,7 @@
 const {
   createCommentByArticleId,
-  fetchCommentsByArticleId
+  fetchCommentsByArticleId,
+  updateCommentById
 } = require('../models/comments');
 
 const { checkArticleExists } = require('../models/articles');
@@ -25,6 +26,17 @@ exports.getCommentsByArticleId = (req, res, next) => {
   ])
     .then(([comments]) => {
       res.status(200).send({ comments });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.patchCommentById = (req, res, next) => {
+  const { comment_id } = req.params;
+  updateCommentById(comment_id, req.body)
+    .then((updatedComment) => {
+      res.status(200).send({ comment: updatedComment });
     })
     .catch((err) => {
       next(err);
