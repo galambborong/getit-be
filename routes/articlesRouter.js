@@ -3,11 +3,15 @@ const {
   deleteArticleById,
   patchArticleById,
   getArticleById,
-  postCommentByArticleId,
-  getCommentsByArticleId,
   getAllArticles,
   postNewArticle
 } = require('../controllers/articles');
+
+const {
+  postCommentByArticleId,
+  getCommentsByArticleId
+} = require('../controllers/comments');
+
 const { err405 } = require('../errors');
 
 articlesRouter.route('/').get(getAllArticles).post(postNewArticle).all(err405);
