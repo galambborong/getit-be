@@ -5,7 +5,8 @@ const {
   createCommentByArticleId,
   fetchCommentsByArticleId,
   checkArticleExists,
-  fetchAllArticles
+  fetchAllArticles,
+  createNewArticle
 } = require('../models/articles');
 
 exports.deleteArticleById = (req, res, next) => {
@@ -72,6 +73,17 @@ exports.getAllArticles = (req, res, next) => {
   fetchAllArticles(req.query)
     .then((articles) => {
       res.status(200).send({ articles });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.postNewArticle = (req, res, next) => {
+  createNewArticle(req.body)
+    .then((article) => {
+      console.log(article);
+      res.status(201).send({ article });
     })
     .catch((err) => {
       next(err);

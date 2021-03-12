@@ -5,11 +5,12 @@ const {
   getArticleById,
   postCommentByArticleId,
   getCommentsByArticleId,
-  getAllArticles
+  getAllArticles,
+  postNewArticle
 } = require('../controllers/articles');
 const { err405 } = require('../errors');
 
-articlesRouter.route('/').get(getAllArticles);
+articlesRouter.route('/').get(getAllArticles).post(postNewArticle);
 
 articlesRouter
   .route('/:article_id')

@@ -122,3 +122,20 @@ exports.fetchAllArticles = ({ sort_by, order, author, topic }) => {
       return articles;
     });
 };
+
+exports.createNewArticle = ({ title, topic, author, body }) => {
+  const tmpArticle = {
+    author,
+    body,
+    topic,
+    title,
+    created_at: Date.now()
+  };
+  const formattedArticle = modifyTimeStamp([tmpArticle]);
+  return connection('articles')
+    .insert(formattedArticle)
+    .returning('*')
+    .then(([insertedArticle]) => {
+      return insertedArticle;
+    });
+};
