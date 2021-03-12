@@ -37,3 +37,13 @@ exports.updateCommentById = (commentId, { inc_votes }) => {
       else return Promise.reject({ status: 404, msg: 'Comment not found' });
     });
 };
+
+exports.removeCommentById = (commentId) => {
+  return connection('comments')
+    .where('comment_id', commentId)
+    .del()
+    .then((deleteCount) => {
+      if (deleteCount === 0)
+        return Promise.reject({ status: 404, msg: 'Comment not found' });
+    });
+};

@@ -311,7 +311,7 @@ describe('/api', () => {
                 expect(body.msg).toBe('Invalid type');
               });
           });
-          it('Status 404: Valid id not present', () => {
+          it('Status 404: Valid id not found', () => {
             return request(app)
               .delete('/api/articles/301')
               .expect(404)
@@ -610,7 +610,7 @@ describe('/api', () => {
   });
   describe('/comments', () => {
     describe('/:comment_id', () => {
-      describe.only('PATCH method', () => {
+      describe('PATCH method', () => {
         it('Status 200: Update comment votes column', () => {
           return request(app)
             .patch('/api/comments/1')
@@ -675,6 +675,50 @@ describe('/api', () => {
                 expect(body.msg).toBe('Comment not found');
               });
           });
+        });
+      });
+      describe('DELETE method', () => {
+        it('Status 204: Successfully delete comment', () => {
+          return request(app)
+            .delete('/api/comments/1')
+            .expect(204)
+            .then(() => {
+              return connection
+                .select('*')
+                .from('comments')
+                .where('comment_id', 1);
+            })
+            .then((comment) => {
+              expect(comment).toHaveLength(0);
+            });
+        });
+        describe('Error handling', () => {
+          it('Status 400: Invalid comment_id', () => {
+            return request(app)
+              .delete('/api/comments/a_comment')
+              .expect(400)
+              .then(({ body }) => {
+                expect(body.msg).toBe('Invalid type');
+              });
+          });
+          it('Status 404: comment_id not found', () => {
+            return request(app)
+              .delete('/api/comments/324')
+              .expect(404)
+              .then(({ body }) => {
+                expect(body.msg).toBe('Comment not found');
+              });
+          });
+        });
+      });
+      describe('Methods not allowed', () => {
+        it('Status 405: Not allowed', () => {
+          return request(app)
+            .get('/api/comments/7')
+            .expect(405)
+            .then(({ body }) => {
+              expect(body.msg).toBe('Method not allowed');
+            });
         });
       });
     });
