@@ -90,7 +90,7 @@ exports.checkArticleExists = (articleId) => {
     });
 };
 
-exports.fetchAllArticles = () => {
+exports.fetchAllArticles = ({ sort_by, order, author, topic }) => {
   return connection
     .select(
       'articles.article_id',
@@ -105,6 +105,15 @@ exports.fetchAllArticles = () => {
     .from('articles')
     .leftJoin('comments', 'articles.article_id', '=', 'comments.article_id')
     .groupBy('articles.article_id')
+    .orderBy(sort_by || 'articles.created_at', order || 'desc')
+    .modify((querySoFar) => {
+      if (author !== undefined) {
+        querySoFar.where('articles.author', author);
+      }
+      if (topic !== undefined) {
+        querySoFar.where('topic', topic);
+      }
+    })
     .then((articles) => {
       articles.forEach((article) => {
         article.comment_count = Number(article.comment_count);

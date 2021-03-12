@@ -78,6 +78,70 @@ describe('/api', () => {
             });
           });
       });
+      it('Status 200: Default sort order by date column', () => {
+        return request(app)
+          .get('/api/articles')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles).toBeSortedBy('created_at', {
+              descending: true
+            });
+          });
+      });
+      describe('Queries', () => {
+        it('Status 200: Sorts by specified column', () => {
+          return request(app)
+            .get('/api/articles?sort_by=author')
+            .expect(200)
+            .then(({ body }) => {
+              expect(body.articles).toBeSortedBy('author', {
+                descending: true
+              });
+            });
+        });
+        it('Status 200: Orders articles as specified', () => {
+          return request(app)
+            .get('/api/articles?order=asc')
+            .expect(200)
+            .then(({ body }) => {
+              expect(body.articles).toBeSortedBy('created_at', {
+                ascending: true
+              });
+            });
+        });
+        it('Status 200: Sorts and orders articles as specified', () => {
+          return request(app)
+            .get('/api/articles?sort_by=author&order=asc')
+            .expect(200)
+            .then(({ body }) => {
+              expect(body.articles).toBeSortedBy('author', {
+                ascending: true
+              });
+            });
+        });
+        it('Status 200: Filter articles by author', () => {
+          return request(app)
+            .get('/api/articles?author=icellusedkars')
+            .expect(200)
+            .then(({ body }) => {
+              expect(
+                body.articles.every(
+                  (article) => article.author === 'icellusedkars'
+                )
+              ).toBe(true);
+            });
+        });
+        it('Status 200: Filter articles by topic', () => {
+          return request(app)
+            .get('/api/articles?topic=cats')
+            .expect(200)
+            .then(({ body }) => {
+              expect(
+                body.articles.every((article) => article.topic === 'cats')
+              ).toBe(true);
+            });
+        });
+      });
     });
     describe('/:article_id', () => {
       describe('DELETE method', () => {
