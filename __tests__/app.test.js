@@ -6,6 +6,17 @@ const app = require('../app');
 beforeEach(() => connection.seed.run());
 afterAll(() => connection.destroy());
 
+describe('/*', () => {
+  it('Status 404: path not found', () => {
+    return request(app).get('/hello').expect(404);
+  });
+  it('Status 404: path not found', () => {
+    return request(app).get('/apy/articles').expect(404);
+  });
+  it('Status 404: path not found', () => {
+    return request(app).get('/api/articlez').expect(404);
+  });
+});
 describe('/api', () => {
   describe('/topics', () => {
     describe('GET method', () => {
@@ -181,6 +192,22 @@ describe('/api', () => {
             .expect(400)
             .then(({ body }) => {
               expect(body.msg).toBe('Invalid type');
+            });
+        });
+        it('Status 404: Author not found', () => {
+          return request(app)
+            .get('/api/articles?author=galambborong')
+            .expect(404)
+            .then(({ body }) => {
+              expect(body.msg).toBe('Article not found');
+            });
+        });
+        it('Status 404: Topic not found', () => {
+          return request(app)
+            .get('/api/articles?topic=icecream')
+            .expect(404)
+            .then(({ body }) => {
+              expect(body.msg).toBe('Article not found');
             });
         });
       });

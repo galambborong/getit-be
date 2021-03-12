@@ -16,7 +16,7 @@ app.use(customErrorHandler);
 
 app.use(err400);
 app.use(err404);
-app.use(err405);
+// app.use(err405);
 app.use(err500);
 
 module.exports = app;

@@ -88,14 +88,17 @@ exports.fetchAllArticles = ({ sort_by, order, author, topic }) => {
         querySoFar.where('articles.author', author);
       }
       if (topic !== undefined) {
-        querySoFar.where('topic', topic);
+        querySoFar.where('articles.topic', topic);
       }
     })
     .then((articles) => {
       articles.forEach((article) => {
         article.comment_count = Number(article.comment_count);
       });
-      return articles;
+      // console.log(articles);
+      if (!articles.length)
+        return Promise.reject({ status: 404, msg: 'Article not found' });
+      else return articles;
     });
 };
 
