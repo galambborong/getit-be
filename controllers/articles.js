@@ -82,7 +82,6 @@ exports.getAllArticles = (req, res, next) => {
 exports.postNewArticle = (req, res, next) => {
   createNewArticle(req.body)
     .then((article) => {
-      console.log(article);
       res.status(201).send({ article });
     })
     .catch((err) => {

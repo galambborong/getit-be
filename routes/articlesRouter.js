@@ -10,7 +10,7 @@ const {
 } = require('../controllers/articles');
 const { err405 } = require('../errors');
 
-articlesRouter.route('/').get(getAllArticles).post(postNewArticle);
+articlesRouter.route('/').get(getAllArticles).post(postNewArticle).all(err405);
 
 articlesRouter
   .route('/:article_id')

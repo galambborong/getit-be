@@ -208,6 +208,41 @@ describe('/api', () => {
             });
           });
       });
+      describe('Error handling', () => {
+        it('Status 400: Incorrect article shape :: unknown columns', () => {
+          return request(app)
+            .post('/api/articles')
+            .send({ hello: 'this', is: 'a', wrong: 'article', shape: 'true' })
+            .expect(400)
+            .then(({ body }) => {
+              expect(body.msg).toBe('Invalid type');
+            });
+        });
+        it('Status 400: Incomplete article :: missing columns', () => {
+          return request(app)
+            .post('/api/articles')
+            .send({
+              title: 'Hey',
+              author: 'icellusedkars',
+              body: 'One massive article'
+            })
+            .expect(400)
+            .then(({ body }) => {
+              expect(body.msg).toBe('Invalid type');
+            });
+        });
+      });
+    });
+    describe('Disallowed methods', () => {
+      it('Status 405: Method not allowed', () => {
+        return request(app)
+          .patch('/api/articles')
+          .send({ some: 'nonsense' })
+          .expect(405)
+          .then(({ body }) => {
+            expect(body.msg).toBe('Method not allowed');
+          });
+      });
     });
     describe('/:article_id', () => {
       describe('DELETE method', () => {
