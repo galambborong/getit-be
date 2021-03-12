@@ -9,7 +9,8 @@ exports.fetchUserByUsername = (username) => {
       if (user.length === 0) {
         return Promise.reject({ status: 404, msg: 'User does not exist' });
       } else {
-        return user;
+        const [deconstructedUser] = user;
+        return deconstructedUser;
       }
     });
 };

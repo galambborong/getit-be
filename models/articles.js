@@ -24,7 +24,8 @@ exports.updateArticleById = (articleId, votesIncrement) => {
         if (!article.length) {
           return Promise.reject({ status: 404, msg: 'Article not found' });
         } else {
-          return article;
+          const [finalArticle] = article;
+          return finalArticle;
         }
       });
   }
@@ -51,7 +52,8 @@ exports.fetchArticleById = (articleId) => {
         return Promise.reject({ status: 404, msg: 'Article not found' });
       } else {
         article[0].comment_count = Number(article[0].comment_count);
-        return article;
+        const [finalArticle] = article;
+        return finalArticle;
       }
     });
 };
@@ -95,7 +97,6 @@ exports.fetchAllArticles = ({ sort_by, order, author, topic }) => {
       articles.forEach((article) => {
         article.comment_count = Number(article.comment_count);
       });
-      // console.log(articles);
       if (!articles.length)
         return Promise.reject({ status: 404, msg: 'Article not found' });
       else return articles;

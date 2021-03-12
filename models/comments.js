@@ -13,7 +13,12 @@ exports.createCommentByArticleId = (articleId, username, body) => {
     created_at: Date.now()
   };
   const formattedComment = modifyTimeStamp([temporaryComment]);
-  return connection('comments').insert(formattedComment).returning('*');
+  return connection('comments')
+    .insert(formattedComment)
+    .returning('*')
+    .then(([comment]) => {
+      return comment;
+    });
 };
 
 exports.fetchCommentsByArticleId = (articleId, { sort_by, order }) => {
