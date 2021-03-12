@@ -91,6 +91,7 @@ exports.checkArticleExists = (articleId) => {
 };
 
 exports.fetchAllArticles = ({ sort_by, order, author, topic }) => {
+  if (order !== 'asc') order = undefined;
   return connection
     .select(
       'articles.article_id',

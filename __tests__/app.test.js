@@ -22,6 +22,16 @@ describe('/api', () => {
           });
       });
     });
+    describe('Methods not allowed', () => {
+      it('Status 405: Method not allowed', () => {
+        return request(app)
+          .delete('/api/topics')
+          .expect(405)
+          .then(({ body }) => {
+            expect(body.msg).toBe('Method not allowed');
+          });
+      });
+    });
   });
   describe('/users', () => {
     describe('/:username', () => {
@@ -60,7 +70,7 @@ describe('/api', () => {
     });
   });
   describe('/articles', () => {
-    describe.only('GET method', () => {
+    describe('GET method', () => {
       it('Status 200: Return all articles in expected shape', () => {
         return request(app)
           .get('/api/articles')
@@ -141,6 +151,62 @@ describe('/api', () => {
               ).toBe(true);
             });
         });
+      });
+      describe('Error handling', () => {
+        it('Status 200: Ignore invalid order value', () => {
+          return request(app)
+            .get('/api/articles?order=name')
+            .expect(200)
+            .then(({ body }) => {
+              expect(Array.isArray(body.articles)).toBe(true);
+              expect(body.articles).toBeSortedBy('created_at', {
+                descending: true
+              });
+            });
+        });
+        it('Status 200: Ignore invalid query argument', () => {
+          return request(app)
+            .get('/api/articles?pigeon=author')
+            .expect(200)
+            .then(({ body }) => {
+              expect(Array.isArray(body.articles)).toBe(true);
+              expect(body.articles).toBeSortedBy('created_at', {
+                descending: true
+              });
+            });
+        });
+        it('Status 400: Invalid sort_by value', () => {
+          return request(app)
+            .get('/api/articles?sort_by=age')
+            .expect(400)
+            .then(({ body }) => {
+              expect(body.msg).toBe('Invalid type');
+            });
+        });
+      });
+    });
+    describe('POST method', () => {
+      it('Status 201: Create and return new article', () => {
+        return request(app)
+          .post('/api/articles')
+          .send({
+            title: 'One massive article',
+            topic: 'cats',
+            author: 'rogersop',
+            body:
+              "This is a crazy long article about cats which I know you'll enjoy"
+          })
+          .expect(201)
+          .then(({ body }) => {
+            expect(body.article).toMatchObject({
+              article_id: expect.any(Number),
+              author: expect.any(String),
+              body: expect.any(String),
+              topic: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number)
+            });
+          });
       });
     });
     describe('/:article_id', () => {
