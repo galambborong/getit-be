@@ -124,6 +124,8 @@ exports.fetchAllArticles = ({ sort_by, order, author, topic }) => {
 };
 
 exports.createNewArticle = ({ title, topic, author, body }) => {
+  if (typeof body !== 'string' || typeof title !== 'string')
+    return Promise.reject({ status: 400, msg: 'Article not valid' });
   const tmpArticle = {
     author,
     body,

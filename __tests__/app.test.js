@@ -215,7 +215,7 @@ describe('/api', () => {
             .send({ hello: 'this', is: 'a', wrong: 'article', shape: 'true' })
             .expect(400)
             .then(({ body }) => {
-              expect(body.msg).toBe('Invalid type');
+              expect(body.msg).toBe('Article not valid');
             });
         });
         it('Status 400: Incomplete article :: missing columns', () => {
@@ -229,6 +229,34 @@ describe('/api', () => {
             .expect(400)
             .then(({ body }) => {
               expect(body.msg).toBe('Invalid type');
+            });
+        });
+        it('Status 400: Incorrect article shape :: wrong data types', () => {
+          return request(app)
+            .post('/api/articles')
+            .send({
+              title: 1,
+              topic: 'cats',
+              body: true,
+              author: 'rogersop'
+            })
+            .expect(400)
+            .then(({ body }) => {
+              expect(body.msg).toBe('Article not valid');
+            });
+        });
+        it('Status 404: Data not in referenced table', () => {
+          return request(app)
+            .post('/api/articles')
+            .send({
+              title: 'Another attempt',
+              author: 'galambborong',
+              topic: 'mitch',
+              body: 'This is an article'
+            })
+            .expect(404)
+            .then(({ body }) => {
+              expect(body.msg).toBe('Not found');
             });
         });
       });
