@@ -32,6 +32,16 @@ describe('/api', () => {
         });
     });
   });
+  describe('Error handling', () => {
+    it('Status 405: Not allowed', () => {
+      return request(app)
+        .delete('/api')
+        .expect(405)
+        .then(({ body }) => {
+          expect(body.msg).toBe('Method not allowed');
+        });
+    });
+  });
   describe('/topics', () => {
     describe('GET method', () => {
       test('Status 200: Return all topics', () => {
