@@ -19,9 +19,120 @@
           "topic": "cooking",
           "author": "weegembump",
           "body": "Text from the article..",
-          "created_at": 1527695953341
+          "created_at": "2016-08-18T12:07:52.389Z",
+          "comment_count": 7,
+          "article_id": 12
         }
       ]
     }
+  },
+  "POST /api/articles": {
+    "description": "creates a new article",
+    "exampleSubmission": {
+      "title": "A new article is born",
+      "topic": "cats",
+      "author": "username",
+      "body": "This is a long bit of text..."
+    },
+    "exampleResponse": {
+      "article": {
+        "article_id": 22,
+        "title": "A new article is born",
+        "topic": "cats",
+        "author": "username",
+        "body": "This is a long bit of text...",
+        "created_at": "2016-08-18T12:07:52.389Z",
+        "votes": 0
+      }
+    }
+  },
+  "GET /api/articles/:article_id": {
+    "description": "serves article with specified article_id",
+    "exampleResponse": {
+      "article": {
+        "article_id": 22,
+        "title": "A new article is born",
+        "topic": "cats",
+        "author": "username",
+        "body": "This is a long bit of text...",
+        "created_at": "2016-08-18T12:07:52.389Z",
+        "votes": 0,
+        "comment_count": 9
+      }
+    }
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "update an article's vote count",
+    "exampleSubmission": {
+      "inc_votes": 7
+    },
+    "exampleResponse": {
+      "article": {
+        "article_id": 22,
+        "title": "A new article is born",
+        "topic": "cats",
+        "author": "username",
+        "body": "This is a long bit of text...",
+        "created_at": "2016-08-18T12:07:52.389Z",
+        "votes": 7,
+        "comment_count": 9
+      }
+    }
+  },
+  "DELETE /api/articles/:article_id": {
+    "description": "delete specified article and do not serve any thing"
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "serves an array of comments related to article_id",
+    "exampleReponse": {
+      "comments": [
+        {
+          "comment_id": 19,
+          "votes": 8,
+          "created_at": "2016-08-18T12:07:52.389Z",
+          "author": "username",
+          "body": "This is a substantial comment"
+        },
+        {
+          "another": "comment..."
+        }
+      ]
+    }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "creates a new comment related to the specific article",
+    "exampleSubmission": {
+      "username": "anotheruser",
+      "body": "What an amazing article this was"
+    },
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 99,
+        "author": "anotheruser",
+        "article_id": 1,
+        "votes": 0,
+        "created_at": "2016-08-18T12:07:52.389Z",
+        "body": "What an amazing article this was"
+      }
+    }
+  },
+  "PATCH /api/comments/:comment_id": {
+    "description": "update a comment's vote count",
+    "exampleSubmission": {
+      "inc_votes": 12
+    },
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 99,
+        "author": "anotheruser",
+        "article_id": 1,
+        "votes": 12,
+        "created_at": "2016-08-18T12:07:52.389Z",
+        "body": "What an amazing article this was"
+      }
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "delete specified comment and do not serve any thing"
   }
 }
