@@ -1,23 +1,19 @@
 const connection = require('../db/connection');
 
-const { modifyTimeStamp } = require('../db/utils/data-manipulation');
-
 exports.createCommentByArticleId = (articleId, username, body) => {
   if (username === undefined || body === undefined) {
     return Promise.reject({ status: 400, msg: 'Invalid comment properties' });
   }
-  const temporaryComment = {
+  const comment = {
     author: username,
     body: body,
-    article_id: articleId,
-    created_at: Date.now()
+    article_id: articleId
   };
-  const formattedComment = modifyTimeStamp([temporaryComment]);
   return connection('comments')
-    .insert(formattedComment)
+    .insert(comment)
     .returning('*')
-    .then(([comment]) => {
-      return comment;
+    .then(([createdComment]) => {
+      return createdComment;
     });
 };
 

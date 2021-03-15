@@ -1,7 +1,5 @@
 const connection = require('../db/connection');
 
-const { modifyTimeStamp } = require('../db/utils/data-manipulation');
-
 exports.deleteArticle = (articleId) => {
   return connection('articles')
     .where('article_id', articleId)
@@ -106,16 +104,14 @@ exports.fetchAllArticles = ({ sort_by, order, author, topic }) => {
 exports.createNewArticle = ({ title, topic, author, body }) => {
   if (typeof body !== 'string' || typeof title !== 'string')
     return Promise.reject({ status: 400, msg: 'Article not valid' });
-  const tmpArticle = {
+  const article = {
     author,
     body,
     topic,
-    title,
-    created_at: Date.now()
+    title
   };
-  const formattedArticle = modifyTimeStamp([tmpArticle]);
   return connection('articles')
-    .insert(formattedArticle)
+    .insert(article)
     .returning('*')
     .then(([insertedArticle]) => {
       return insertedArticle;
