@@ -18,6 +18,20 @@ describe('/*', () => {
   });
 });
 describe('/api', () => {
+  describe('GET method', () => {
+    it('Status 200: Serves JSON summary of available endpoints', () => {
+      return request(app)
+        .get('/api')
+        .expect(200)
+        .then(({ body }) => {
+          expect(body).toMatchObject({
+            'GET /api': expect.any(Object),
+            'GET /api/topics': expect.any(Object),
+            'GET /api/articles': expect.any(Object)
+          });
+        });
+    });
+  });
   describe('/topics', () => {
     describe('GET method', () => {
       test('Status 200: Return all topics', () => {
