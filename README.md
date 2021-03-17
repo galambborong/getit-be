@@ -1,6 +1,6 @@
 # Northcoders News API
 
-Please visit [the live API on Heroku](https://pk-nc-news.herokuapp.com)!
+Please visit [the live API on Heroku](https://pk-nc-news.herokuapp.com/api)!
 
 # Original README from sprint
 
