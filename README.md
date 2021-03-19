@@ -1,8 +1,8 @@
-# News API
+# PK-NC-NEWS
 
 ## Overview 
 
-This is a Reddit-like back end REST API, which can be accessed [here](https://pk-nc-news.herokuapp.com/api). 
+This is a Reddit-like back end REST API, which can be accessed [here](https://pk-nc-news.herokuapp.com/api), created during the back end module on the [Northcoders](https://northcoders.com/) developer bootcamp. 
 
 Endpoints currently supported:
 
