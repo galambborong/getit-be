@@ -71,7 +71,7 @@ describe('/api', () => {
   describe('/users', () => {
     describe('/:username', () => {
       describe('GET method', () => {
-        it('Status 200: Reutn appropriate user from username', () => {
+        it('Status 200: Return appropriate user from username', () => {
           return request(app)
             .get('/api/users/lurker')
             .expect(200)

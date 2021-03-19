@@ -9,8 +9,7 @@ const { checkArticleExists } = require('../models/articles');
 
 exports.postCommentByArticleId = (req, res, next) => {
   const { article_id } = req.params;
-  const { username, body } = req.body;
-  createCommentByArticleId(article_id, username, body)
+  createCommentByArticleId(article_id, req.body)
     .then((comment) => {
       res.status(201).send({ comment });
     })

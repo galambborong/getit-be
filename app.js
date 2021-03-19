@@ -3,7 +3,6 @@ const apiRouter = require('./routes/apiRouter');
 const {
   err500,
   customErrorHandler,
-  err405,
   err400,
   err404
 } = require('./errors/index');
@@ -16,7 +15,6 @@ app.use(customErrorHandler);
 
 app.use(err400);
 app.use(err404);
-// app.use(err405);
 app.use(err500);
 
 module.exports = app;
