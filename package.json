@@ -1,7 +1,7 @@
 {
-  "name": "be-nc-news",
+  "name": "pk-nc-news",
   "version": "1.0.0",
-  "description": "bc-nc-news",
+  "description": "pk-nc-news",
   "main": "index.js",
   "scripts": {
     "setup-dbs": "psql -f ./db/setup.sql",
@@ -19,15 +19,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/northcoders/be-nc-news.git"
+    "url": "git+https://github.com/galambborong/pk-nc-news.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/northcoders/be-nc-news/issues"
+    "url": "https://github.com/galambborong/pk-nc-news/issues"
   },
-  "homepage": "https://github.com/northcoders/be-nc-news#readme",
+  "homepage": "https://github.com/galambborong/pk-nc-news#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",

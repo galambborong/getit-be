@@ -9,6 +9,16 @@
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
   },
+  "GET /api/users/:username": {
+    "description": "serve user data by username",
+    "exampleResponse": {
+      "user": {
+        "username": "grumpy19",
+        "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/7/78/Mr-Grumpy-3A.PNG/revision/latest?cb=20170707233013",
+        "name": "Paul Grump"
+      }
+    }
+  },
   "GET /api/articles": {
     "description": "serves an array of all topics",
     "queries": ["author", "topic", "sort_by", "order"],
