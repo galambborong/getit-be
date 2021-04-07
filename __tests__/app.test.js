@@ -69,6 +69,31 @@ describe('/api', () => {
     });
   });
   describe('/users', () => {
+    describe('GET method', () => {
+      it('Status 200: Return all users', () => {
+        return request(app)
+          .get('/api/users')
+          .expect(200)
+          .then(({ body }) => {
+            expect(Array.isArray(body.users)).toBe(true);
+            expect(body.users[0]).toMatchObject({
+              username: expect.any(String),
+              avatar_url: expect.any(String),
+              name: expect.any(String)
+            });
+          });
+      });
+    });
+    describe('Methods not allowed', () => {
+      it('Status 405: Method not allowed', () => {
+        return request(app)
+          .delete('/api/users')
+          .expect(405)
+          .then(({ body }) => {
+            expect(body.msg).toBe('Method not allowed');
+          });
+      });
+    });
     describe('/:username', () => {
       describe('GET method', () => {
         it('Status 200: Return appropriate user from username', () => {
