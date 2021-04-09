@@ -3,7 +3,8 @@ const {
   updateArticleById,
   fetchArticleById,
   fetchAllArticles,
-  createNewArticle
+  createNewArticle,
+  fetchTotalArticleCount
 } = require('../models/articles');
 
 exports.deleteArticleById = (req, res, next) => {
@@ -41,9 +42,9 @@ exports.getArticleById = (req, res, next) => {
 };
 
 exports.getAllArticles = (req, res, next) => {
-  fetchAllArticles(req.query)
-    .then((articles) => {
-      res.status(200).send({ articles });
+  Promise.all([fetchAllArticles(req.query), fetchTotalArticleCount()])
+    .then(([articles, { total_count }]) => {
+      res.status(200).send({ articles, total_count });
     })
     .catch((err) => {
       next(err);

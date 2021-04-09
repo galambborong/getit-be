@@ -227,6 +227,14 @@ describe('/api', () => {
               expect(body.articles.length).toBe(6);
             });
         });
+        it('Status 200: Have a total_count property', () => {
+          return request(app)
+            .get('/api/articles?limit=3&p=2')
+            .expect(200)
+            .then(({ body }) => {
+              expect(body).toHaveProperty('total_count');
+            });
+        });
       });
       describe('Error handling', () => {
         it('Status 200: Ignore invalid order value', () => {
@@ -251,6 +259,9 @@ describe('/api', () => {
               });
             });
         });
+        it('Status 200: Ignore invalid limit argument', () => {
+          return request(app).get('/api/articles?limit=hello').expect(200);
+        });
         it('Status 400: Invalid sort_by value', () => {
           return request(app)
             .get('/api/articles?sort_by=age')
@@ -270,6 +281,14 @@ describe('/api', () => {
         it('Status 404: Topic not found', () => {
           return request(app)
             .get('/api/articles?topic=icecream')
+            .expect(404)
+            .then(({ body }) => {
+              expect(body.msg).toBe('Article not found');
+            });
+        });
+        it('Status 404: Page not found', () => {
+          return request(app)
+            .get('/api/articles?p=5&limit=10')
             .expect(404)
             .then(({ body }) => {
               expect(body.msg).toBe('Article not found');

@@ -92,13 +92,14 @@ exports.fetchAllArticles = ({ sort_by, order, author, topic, limit, p }) => {
         querySoFar.where('articles.topic', topic);
       }
       if (p !== undefined) {
-        querySoFar.offset(p * limit - limit + 1);
+        querySoFar.offset(p * limit - limit);
       }
     })
     .then((articles) => {
       articles.forEach((article) => {
         article.comment_count = Number(article.comment_count);
       });
+
       if (!articles.length)
         return Promise.reject({ status: 404, msg: 'Article not found' });
       else return articles;
@@ -119,5 +120,14 @@ exports.createNewArticle = ({ title, topic, author, body }) => {
     .returning('*')
     .then(([insertedArticle]) => {
       return insertedArticle;
+    });
+};
+
+exports.fetchTotalArticleCount = () => {
+  return connection
+    .select('*')
+    .from('articles')
+    .then((articles) => {
+      return { total_count: articles.length };
     });
 };
