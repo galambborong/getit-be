@@ -92,7 +92,7 @@ exports.fetchAllArticles = ({ sort_by, order, author, topic, limit, p }) => {
         querySoFar.where('articles.topic', topic);
       }
       if (p !== undefined) {
-        querySoFar.offset((p - 1) * limit);
+        querySoFar.offset(p * limit - limit + 1);
       }
     })
     .then((articles) => {
