@@ -66,7 +66,7 @@ exports.checkArticleExists = (articleId) => {
     });
 };
 
-exports.fetchAllArticles = ({ sort_by, order, author, topic }) => {
+exports.fetchAllArticles = ({ sort_by, order, author, topic, limit, p }) => {
   if (order !== 'asc') order = undefined;
   return connection
     .select(
@@ -83,12 +83,16 @@ exports.fetchAllArticles = ({ sort_by, order, author, topic }) => {
     .leftJoin('comments', 'articles.article_id', '=', 'comments.article_id')
     .groupBy('articles.article_id')
     .orderBy(sort_by || 'articles.created_at', order || 'desc')
+    .limit(limit || 10)
     .modify((querySoFar) => {
       if (author !== undefined) {
         querySoFar.where('articles.author', author);
       }
       if (topic !== undefined) {
         querySoFar.where('articles.topic', topic);
+      }
+      if (p !== undefined) {
+        querySoFar.offset((p - 1) * limit);
       }
     })
     .then((articles) => {

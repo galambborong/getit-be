@@ -211,6 +211,22 @@ describe('/api', () => {
               ).toBe(true);
             });
         });
+        it('Status 200: Limit articles as specified', () => {
+          return request(app)
+            .get('/api/articles?limit=5')
+            .expect(200)
+            .then(({ body }) => {
+              expect(body.articles.length).toBe(5);
+            });
+        });
+        it("Status 200: Return specified 'page'", () => {
+          return request(app)
+            .get('/api/articles?limit=6&p=2')
+            .expect(200)
+            .then(({ body }) => {
+              expect(body.articles.length).toBe(6);
+            });
+        });
       });
       describe('Error handling', () => {
         it('Status 200: Ignore invalid order value', () => {
