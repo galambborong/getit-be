@@ -68,6 +68,7 @@ exports.checkArticleExists = (articleId) => {
 
 exports.fetchAllArticles = ({ sort_by, order, author, topic, limit, p }) => {
   if (order !== 'asc') order = undefined;
+  if (limit === undefined) limit = 10;
   return connection
     .select(
       'articles.article_id',
@@ -83,7 +84,7 @@ exports.fetchAllArticles = ({ sort_by, order, author, topic, limit, p }) => {
     .leftJoin('comments', 'articles.article_id', '=', 'comments.article_id')
     .groupBy('articles.article_id')
     .orderBy(sort_by || 'articles.created_at', order || 'desc')
-    .limit(limit || 10)
+    .limit(limit)
     .modify((querySoFar) => {
       if (author !== undefined) {
         querySoFar.where('articles.author', author);
