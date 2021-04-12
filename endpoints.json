@@ -40,7 +40,12 @@
 
   "GET /api/articles": {
     "description": "serves an array of all topics",
-    "queries": ["author", "topic", "sort_by", "order"],
+    "queries": ["author", "topic", "sort_by", "order", "limit", "p (page)"],
+    "defaults": {
+      "limit": 10,
+      "order": "desc",
+      "sort_by": "created_at"
+    },
     "exampleResponse": {
       "articles": [
         {
