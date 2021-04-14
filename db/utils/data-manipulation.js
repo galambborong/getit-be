@@ -12,7 +12,7 @@ exports.modifyTimeStamp = (array) => {
   return newArray;
 };
 
-exports.creatRefObj = (array, key, value) => {
+exports.createRefObj = (array, key, value) => {
   const newObj = {};
   array.map((item) => {
     const newKey = item[key];

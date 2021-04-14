@@ -7,7 +7,7 @@ const {
 
 const {
   modifyTimeStamp,
-  creatRefObj,
+  createRefObj,
   formatItems
 } = require('../utils/data-manipulation');
 
@@ -26,7 +26,7 @@ exports.seed = function (knex) {
       return knex('articles').insert(formattedArticles).returning('*');
     })
     .then((seededArticles) => {
-      const referenceArticles = creatRefObj(
+      const referenceArticles = createRefObj(
         seededArticles,
         'title',
         'article_id'

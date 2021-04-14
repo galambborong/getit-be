@@ -1,6 +1,6 @@
 const {
   modifyTimeStamp,
-  creatRefObj,
+  createRefObj,
   formatItems
 } = require('../db/utils/data-manipulation');
 
@@ -110,7 +110,7 @@ describe('modifyTimeStamp', () => {
 
 describe('createRefObj', () => {
   test('returns an empty object given an empty array', () => {
-    expect(creatRefObj([])).toEqual({});
+    expect(createRefObj([])).toEqual({});
   });
   test('it takes a single object array, a key and a value and it gives it a reference', () => {
     const input = [
@@ -125,7 +125,7 @@ describe('createRefObj', () => {
         created_at: '2017-04-21T12:34:54.761Z'
       }
     ];
-    expect(creatRefObj(input, 'title', 'article_id')).toEqual({
+    expect(createRefObj(input, 'title', 'article_id')).toEqual({
       'HOW COOKING HAS CHANGED US': 26
     });
   });
@@ -150,7 +150,7 @@ describe('createRefObj', () => {
         created_at: 1416140514171
       }
     ];
-    expect(creatRefObj(input, 'title', 'article_id')).toEqual({
+    expect(createRefObj(input, 'title', 'article_id')).toEqual({
       'Living in the shadow of a great man': 1,
       'Sony Vaio; or, The Laptop': 2
     });
