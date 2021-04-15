@@ -42,7 +42,7 @@ exports.getArticleById = (req, res, next) => {
 };
 
 exports.getAllArticles = (req, res, next) => {
-  Promise.all([fetchAllArticles(req.query), fetchTotalArticleCount()])
+  Promise.all([fetchAllArticles(req.query), fetchTotalArticleCount(req.query)])
     .then(([articles, { total_count }]) => {
       res.status(200).send({ articles, total_count });
     })

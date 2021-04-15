@@ -124,10 +124,18 @@ exports.createNewArticle = ({ title, topic, author, body }) => {
     });
 };
 
-exports.fetchTotalArticleCount = () => {
+exports.fetchTotalArticleCount = ({topic, author}) => {
   return connection
     .select('*')
     .from('articles')
+    .modify((querySoFar) => {
+      if (author !== undefined) {
+        querySoFar.where('articles.author', author);
+      }
+      if (topic !== undefined) {
+        querySoFar.where('articles.topic', topic);
+      }
+    })
     .then((articles) => {
       return { total_count: articles.length };
     });
