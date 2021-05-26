@@ -2,7 +2,9 @@
 
 ## Overview
 
-This is a Reddit-like back end REST API created during the back end module on the [Northcoders](https://northcoders.com/) developer bootcamp. Access it live [here](https://pk-nc-news.herokuapp.com/api).
+This is a Reddit-like REST API created during the back end module on the [Northcoders](https://northcoders.com/) developer bootcamp. Access it live [here](https://pk-nc-news.herokuapp.com/api).
+
+You can peruse the front end counterpart [here](https://github.com/galambborong/getit), and visit the website itself at [getit.peterkeenan.co.uk](https://getit.peterkeenan.co.uk)
 
 Endpoints currently supported:
 
